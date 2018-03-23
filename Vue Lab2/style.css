@@ -1,0 +1,17 @@
+.custom-select {
+  position: relative;
+  font-family: Arial;
+  width: 10%;
+  display: inline-table;
+}
+
+.option {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid rgb(10, 223, 63);
+  background-color: white;
+}
+
+.selected {
+  background-color: azure;
+}

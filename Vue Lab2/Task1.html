@@ -2,26 +2,27 @@
 
 <head>
     <script src="vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
     <div id="app">
-        <select size="80" multiple v-model="selectedBreeds">
-            <option v-for="breed in breeds" :value="breed">{{breed}}</option>
-        </select>
-        <list :dogge-list="selectedBreeds" input="selBr"></list>
+        <div class="custom-select">
+            <div v-for="breed in breeds" v-on:click="selectBreed(breed)" :class="[{selected:selectedBreeds.includes(breed)}, 'option']">{{breed}}</div>
+        </div>
+        <list :dogge-list="selectedBreeds"></list>
     </div>
     <template id="list-template">
-            <select :class="input" size="80" multiple>
-                <option v-for="bred in doggeList" :value="bred">{{bred}}</option>
-            </select>
-        </template>
+        <div :class="input">
+            <div v-for="bred in doggeList" class="option"> {{bred}}</div>
+        </div>
+    </template>
     <script>
         Vue.component('list', {
             props: {
                 doggeList: {},
                 input: {
-                    default:"breedList"
+                    default: "custom-select"
                 }
             },
             template: '#list-template'
@@ -50,6 +51,17 @@
                     .catch(function (err) {
                         console.log('Fetch Error :-S', err);
                     });
+            },
+            methods: {
+                selectBreed: function (breed) {
+                    if (app.selectedBreeds.includes(breed)) {
+                        app.selectedBreeds.splice(app.selectedBreeds.indexOf(breed), 1);
+
+                    } else {
+                        app.selectedBreeds.push(breed);
+                    }
+
+                }
             }
         });
     </script>
