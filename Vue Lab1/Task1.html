@@ -1,0 +1,26 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="message" />
+        <p>Привет {{message || messagePlaceholder}}</p>
+    </div>
+    <script src="vue.js">
+    </script>
+    <script>
+        let data = {
+            message: "",
+            messagePlaceholder: "незнакомец"
+        }
+        var app = new Vue({
+            el: '#app',
+            data
+        })
+    </script>
+</body>
+
+</html>

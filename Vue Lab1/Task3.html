@@ -1,0 +1,98 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <div id="app">
+        <ul class="rounded">
+            <li v-for="(varieties, breed) in breeds">
+                <p class="brd">{{breed}}</p>
+                <p v-for="variety in varieties" class="red">{{variety}}</p>
+            </li>
+        </ul>
+    </div>
+    <script src="vue.js">
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                breeds: []
+            },
+            mounted() {
+                fetch("https://dog.ceo/api/breeds/list/all")
+                    .then(
+                        function (response) {
+                            if (response.status !== 200) {
+                                console.log('Looks like there was a problem. Status Code: ' +
+                                    response.status);
+                                return;
+                            }
+
+                            response.json().then(function (data) {
+                                app.breeds = data.message;
+                            });
+                        }
+                    )
+                    .catch(function (err) {
+                        console.log('Fetch Error :-S', err);
+                    });
+            }
+        });
+    </script>
+</body>
+<style>
+    .rounded {
+        counter-reset: list;
+        margin-left: 40px;
+        list-style: none;
+        font: 14px "Trebuchet MS", "Lucida Sans";
+        padding: 0;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+    }
+
+    .rounded p {
+        width: 200px;
+        position: relative;
+        display: block;
+        padding: .4em .4em .4em 2em;
+        margin: .5em 0;
+        background: #DAD2CA;
+        color: #444;
+        text-decoration: none;
+        border-radius: .3em;
+        transition: .3s ease-out;
+    }
+
+    .rounded p:hover {
+        background: #E9E4E0;
+    }
+
+    .rounded p.brd:before {
+        content: counter(list);
+        counter-increment: list;
+        position: absolute;
+        left: -1.3em;
+        top: 50%;
+        margin-top: -1.3em;
+        background: #8FD4C1;
+        height: 2em;
+        width: 2em;
+        line-height: 2em;
+        border: .3em solid white;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 2em;
+        transition: all .3s ease-out;
+    }
+
+    p.red {
+        color: red;
+        margin-left: 50px;
+        width: 150px;
+    }
+</style>
+
+</html>

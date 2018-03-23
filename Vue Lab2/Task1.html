@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <select size="80" multiple v-model="selectedBreeds">
+            <option v-for="breed in breeds" :value="breed">{{breed}}</option>
+        </select>
+        <list :dogge-list="selectedBreeds" input="selBr"></list>
+    </div>
+    <template id="list-template">
+            <select :class="input" size="80" multiple>
+                <option v-for="bred in doggeList" :value="bred">{{bred}}</option>
+            </select>
+        </template>
+    <script>
+        Vue.component('list', {
+            props: {
+                doggeList: {},
+                input: {
+                    default:"breedList"
+                }
+            },
+            template: '#list-template'
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                breeds: [],
+                selectedBreeds: []
+            },
+            mounted() {
+                fetch("https://dog.ceo/api/breeds/list/all")
+                    .then(
+                        function (response) {
+                            if (response.status !== 200) {
+                                console.log('Looks like there was a problem. Status Code: ' +
+                                    response.status);
+                                return;
+                            }
+
+                            response.json().then(function (data) {
+                                app.breeds = Object.keys(data.message);
+                            });
+                        }
+                    )
+                    .catch(function (err) {
+                        console.log('Fetch Error :-S', err);
+                    });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <button v-on:click.prevent="getRandomBreed">Random breed</button>
+        <ul class="rounded">
+            <li v-for="(varieties, breed) in breed">
+                <p>{{breed}}</p>
+                <p v-for="variety in varieties" class="red">{{variety}}</p>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                breed: [],
+                breeds: []
+            },
+            mounted() {
+                fetch("https://dog.ceo/api/breeds/list/all")
+                    .then(
+                        function (response) {
+                            if (response.status !== 200) {
+                                console.log('Looks like there was a problem. Status Code: ' +
+                                    response.status);
+                                return;
+                            }
+
+                            response.json().then(function (data) {
+                                app.breeds = data.message;
+                            });
+                        }
+                    )
+                    .catch(function (err) {
+                        console.log('Fetch Error :-S', err);
+                    });
+            },
+            methods: {
+                getRandomBreed: function () {
+                    var properties = Object.getOwnPropertyNames(app.breeds);
+                    var index = Math.floor(Math.random() * properties.length);
+                    var output = {};
+                    if (app.breeds[properties[index]].length > 0) {
+                        output[properties[index]] = app.breeds[properties[
+                            index]];
+                        app.breed = output;
+                    } else {
+                        app.getRandomBreed();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

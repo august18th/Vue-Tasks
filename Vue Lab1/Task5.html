@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <button v-on:click.prevent="getRandomBreed">Random breed</button>
+        <button v-on:click.prevent="deleteRandomBreed"> Del random breed</button>
+        <button v-on:click.prevent="shuffle"> Shuffle</button>
+        <ul class="rounded">
+            <li v-for="breed in randBreeds">
+                <p>{{breed}}</p>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                randBreeds: [],
+                breeds: [],
+                count: 0
+            },
+            mounted() {
+                fetch("https://dog.ceo/api/breeds/list/all")
+                    .then(
+                        function (response) {
+                            if (response.status !== 200) {
+                                console.log('Looks like there was a problem. Status Code: ' +
+                                    response.status);
+                                return;
+                            }
+
+                            response.json().then(function (data) {
+                                app.breeds = data.message;
+                            });
+                        }
+                    )
+                    .catch(function (err) {
+                        console.log('Fetch Error :-S', err);
+                    });
+            },
+            methods: {
+                getRandomBreed: function () {
+                    var properties = Object.keys(app.breeds);
+                    var index = Math.floor(Math.random() * properties.length);
+                    Vue.set(app.randBreeds, app.count++, properties[
+                        index]);
+                },
+                deleteRandomBreed: function () {
+                    var neededLength = app.randBreeds.length - 1;
+                    while (app.randBreeds.length > neededLength) {
+                        var properties = Object.keys(app.breeds);
+                        var index = Math.floor(Math.random() * properties.length);
+                        app.randBreeds.splice(index, 1);
+                    }
+                    app.count--;
+                },
+                shuffle: function () {
+                    let counter = app.randBreeds.length;
+
+                    while (counter > 0) {
+                        let index = Math.floor(Math.random() * counter);
+                        counter--;
+
+                        let temp = app.randBreeds[counter];
+                        Vue.set(app.randBreeds, counter, app.randBreeds[index]);
+                        Vue.set(app.randBreeds, index, temp);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
